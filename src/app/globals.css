@@ -1,0 +1,76 @@
+/* globals.css — Tailwind v4 + shadcn/new-york + identitas arsip legal EPBB (full paper) */
+@import "tailwindcss";
+
+@theme {
+  /* shadcn semantic tokens */
+  --color-background: #ede8dc;
+  --color-foreground: #1a1e1a;
+  --color-card: #f7f3ea;
+  --color-card-foreground: #1a1e1a;
+  --color-popover: #f7f3ea;
+  --color-popover-foreground: #1a1e1a;
+  --color-primary: #1d4d3b;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #e2dccb;
+  --color-secondary-foreground: #1a1e1a;
+  --color-muted: #e7e1d2;
+  --color-muted-foreground: #6e6a5e;
+  --color-accent: rgba(29, 77, 59, 0.1);
+  --color-accent-foreground: #1d4d3b;
+  --color-destructive: #a63a2e;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #c9c2b2;
+  --color-input: #c9c2b2;
+  --color-ring: #1d4d3b;
+
+  /* arsip legal — nama khas EPBB */
+  --color-paper: #ede8dc;
+  --color-paper-deep: #e2dccb;
+  --color-ink: #1a1e1a;
+  --color-seal: #1d4d3b;
+  --color-seal-subtle: rgba(29, 77, 59, 0.1);
+  --color-rule: #c9c2b2;
+  --color-cap: #6e6a5e;
+  --color-signal: #a63a2e;
+  --color-success: #1d7a4f;
+  --color-success-subtle: rgba(29, 122, 79, 0.12);
+  --color-danger: #a63a2e;
+  --color-danger-subtle: rgba(166, 58, 46, 0.1);
+
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  --radius-lg: 0.625rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-feature-settings: "rlig" "calt";
+  }
+
+  /* Visible focus outline for accessibility */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}
