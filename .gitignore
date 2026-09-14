@@ -19,10 +19,15 @@
 
 # production
 /build
+/dist/
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
+
+# cache
+.cache/
 
 # debug
 npm-debug.log*
@@ -46,6 +51,9 @@ AGENT.md
 
 # vercel
 .vercel
+
+# IDE
+.idea/
 
 # typescript
 *.tsbuildinfo
