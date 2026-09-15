@@ -5,10 +5,16 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { getSpptByNop, Sppt } from "@/services/api";
 import { formatNopDotted } from "@/lib/validators";
 import { formatLuas, formatRupiah } from "@/lib/format";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { HasilDataSkeleton } from "@/components/skeletons/HasilDataSkeleton";
 import {
   Table,
   TableHeader,
@@ -77,10 +83,6 @@ function StatCard({
   );
 }
 
-function SkeletonBlock({ className }: { className: string }) {
-  return <Skeleton className={className} />;
-}
-
 export default function HasilDataPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -119,13 +121,10 @@ export default function HasilDataPage() {
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent">
               <Search className="h-6 w-6 text-primary" />
             </div>
-            <h2 className="mt-4 text-lg font-semibold">
-              Belum ada pencarian
-            </h2>
+            <h2 className="mt-4 text-lg font-semibold">Belum ada pencarian</h2>
             <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-              Halaman ini menampilkan hasil{" "}
-              <b>1 NOP saja</b>. Silakan cari NOP &
-              tahun terlebih dahulu di menu Pencarian.
+              Halaman ini menampilkan hasil <b>1 NOP saja</b>. Silakan cari NOP
+              & tahun terlebih dahulu di menu Pencarian.
               <br />
               Data diambil real-time dari database (tanpa cache).
             </p>
@@ -142,20 +141,7 @@ export default function HasilDataPage() {
   }
 
   if (loading) {
-    return (
-      <div className="mx-auto max-w-6xl space-y-6">
-        <SkeletonBlock className="h-28" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <SkeletonBlock key={i} className="h-28" />
-          ))}
-        </div>
-        <div className="grid gap-6 lg:grid-cols-2">
-          <SkeletonBlock className="h-64" />
-          <SkeletonBlock className="h-64" />
-        </div>
-      </div>
-    );
+    return <HasilDataSkeleton />;
   }
 
   if (error) {
@@ -169,7 +155,9 @@ export default function HasilDataPage() {
             <h2 className="mt-3 font-semibold text-primary">
               Gagal memuat data
             </h2>
-            <p className="mt-1 text-sm text-muted-foreground break-words">{error}</p>
+            <p className="mt-1 text-sm text-muted-foreground break-words">
+              {error}
+            </p>
             <div className="mt-5 flex justify-center gap-2">
               <Button
                 variant="outline"
@@ -230,14 +218,16 @@ export default function HasilDataPage() {
               <Stamp className="h-3.5 w-3.5 text-seal" />
               <span>Lembar hasil pencarian</span>
               <span className="opacity-50">·</span>
-              <span>Real-time DB</span>
             </div>
             <h1 className="text-xl font-bold text-ink lg:text-2xl">
               {sppt.NmWp || sppt.nm_wp || (raw["nmWp"] as string) || "-"}
             </h1>
             <p
               className="font-mono font-bold tracking-[0.08em] text-ink break-all"
-              style={{ fontSize: "clamp(1.1rem, 3.4vw, 1.7rem)", lineHeight: 1.25 }}
+              style={{
+                fontSize: "clamp(1.1rem, 3.4vw, 1.7rem)",
+                lineHeight: 1.25,
+              }}
             >
               {formatNopDotted(nop)}
             </p>
@@ -318,7 +308,7 @@ export default function HasilDataPage() {
             <div className="flex justify-between gap-4 border-y border-border py-2.5">
               <span className="text-muted-foreground">Nama WP</span>
               <span className="text-right font-medium">
-                {sppt.NmWp || sppt.nm_wp || "-"}
+                {sppt.NmWp || sppt.nm_wp || (raw["nmWp"] as string) || "-"}
               </span>
             </div>
             <div className="flex justify-between gap-4 border-b border-border py-2.5">
@@ -410,13 +400,6 @@ export default function HasilDataPage() {
             <FileText className="h-4 w-4 text-muted-foreground" />
             Ringkasan SPPT (tahun {tahun})
           </CardTitle>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Data real-time dari{" "}
-            <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">
-              GET /api/Sppt/with-nop/{nop}?tahun={tahun}
-            </code>{" "}
-            · Tidak menampilkan ribuan row.
-          </p>
         </CardHeader>
         <CardContent>
           <Table>
@@ -437,18 +420,13 @@ export default function HasilDataPage() {
                     <TableCell className="font-mono text-xs">
                       {formatNopDotted(String(row.Nop || row.nop || nop))}
                     </TableCell>
-                    <TableCell>{row.NmWp || row.nm_wp || "-"}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant={
-                          String(row.NamaTahun || row.nama_tahun) === tahun
-                            ? "success"
-                            : "outline"
-                        }
-                      >
-                        {row.NamaTahun || row.nama_tahun || "-"}
-                      </Badge>
+                      {sppt.NmWp ||
+                        sppt.nm_wp ||
+                        (raw["nmWp"] as string) ||
+                        "-"}
                     </TableCell>
+                    <TableCell>{tahun}</TableCell>
                     <TableCell className="max-w-[220px] truncate">
                       {((row as unknown as Record<string, unknown>)[
                         "AlamatObjek"

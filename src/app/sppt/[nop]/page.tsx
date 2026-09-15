@@ -8,7 +8,7 @@ import { formatLuas } from "@/lib/format";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { SpptDetailSkeleton } from "@/components/skeletons/SpptDetailSkeleton";
 import {
   Table,
   TableHeader,
@@ -39,13 +39,7 @@ export default function SpptDetailPage() {
       .finally(() => setLoading(false));
   }, [nop, tahun]);
 
-  if (loading)
-    return (
-      <div className="mx-auto max-w-4xl space-y-3 p-4">
-        <Skeleton className="h-8 w-32" />
-        <Skeleton className="h-64" />
-      </div>
-    );
+  if (loading) return <SpptDetailSkeleton />;
   if (error)
     return (
       <div className="mx-auto max-w-xl p-8 text-center">

@@ -4,10 +4,16 @@ import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getSpptList } from "@/services/api";
 import { Sppt } from "@/services/api";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { SpptListSkeleton } from "@/components/skeletons/SpptListSkeleton";
 import {
   Table,
   TableHeader,
@@ -33,20 +39,23 @@ export default function DataSpptPage() {
   const [error, setError] = React.useState<string | null>(null);
   const [hasMore, setHasMore] = React.useState(true);
 
-  const fetchPage = React.useCallback(async (p: number) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await getSpptList({ page: p, pageSize });
-      setData(res);
-      setHasMore(res.length === pageSize);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Gagal memuat data");
-      setData([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [pageSize]);
+  const fetchPage = React.useCallback(
+    async (p: number) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await getSpptList({ page: p, pageSize });
+        setData(res);
+        setHasMore(res.length === pageSize);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Gagal memuat data");
+        setData([]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [pageSize],
+  );
 
   React.useEffect(() => {
     fetchPage(page);
@@ -60,14 +69,6 @@ export default function DataSpptPage() {
             <Table2 className="h-5 w-5 text-primary" />
             Data SPPT
           </h1>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Pagination server-side (pageSize {pageSize}) · Tidak load semua sekaligus · Real-time DB
-            {highlight && (
-              <span className="ml-2 rounded border border-border bg-secondary px-1.5 py-0.5 font-mono text-xs">
-                highlight: {highlight}
-              </span>
-            )}
-          </p>
         </div>
         <Button asChild variant="outline" size="sm">
           <Link href="/pencarian">
@@ -80,20 +81,22 @@ export default function DataSpptPage() {
         <CardHeader className="py-3">
           <CardTitle className="flex items-center justify-between text-sm">
             <span>Halaman {page}</span>
-            <span className="text-xs font-normal text-muted-foreground">{data.length} record</span>
+            <span className="text-xs font-normal text-muted-foreground">
+              {data.length} record
+            </span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-0 p-0">
           {loading ? (
-            <div className="space-y-3 p-6">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className="h-10" />
-              ))}
-            </div>
+            <SpptListSkeleton />
           ) : error ? (
             <div className="p-8 text-center">
               <p className="text-sm text-destructive">{error}</p>
-              <Button size="sm" className="mt-3" onClick={() => fetchPage(page)}>
+              <Button
+                size="sm"
+                className="mt-3"
+                onClick={() => fetchPage(page)}
+              >
                 Coba lagi
               </Button>
             </div>
@@ -116,7 +119,9 @@ export default function DataSpptPage() {
               <TableBody>
                 {data.map((row, idx) => {
                   const nop = (row.Nop || row.nop || "") as string;
-                  const tahun = (row.NamaTahun || row.nama_tahun || "") as string;
+                  const tahun = (row.NamaTahun ||
+                    row.nama_tahun ||
+                    "") as string;
                   const isHighlight = highlight !== null && nop === highlight;
                   return (
                     <TableRow
@@ -124,21 +129,40 @@ export default function DataSpptPage() {
                       data-state={isHighlight ? "selected" : undefined}
                       className="cursor-pointer"
                       onClick={() => {
-                        if (nop && tahun) router.push(`/hasil_data?nop=${nop}&tahun=${tahun}`);
+                        if (nop && tahun)
+                          router.push(`/hasil_data?nop=${nop}&tahun=${tahun}`);
                         else if (nop) router.push(`/sppt/${nop}`);
                       }}
                     >
-                      <TableCell className="font-mono text-xs">{nop ? formatNopDotted(nop) : "-"}</TableCell>
-                      <TableCell>{row.NmWp || row.nm_wp || "-"}</TableCell>
+                      <TableCell className="font-mono text-xs">
+                        {nop ? formatNopDotted(nop) : "-"}
+                      </TableCell>
+                      <TableCell>{row.NmWp || row.nm_wp ||"-"}</TableCell>
                       <TableCell>
                         <Badge variant="outline">{tahun || "-"}</Badge>
                       </TableCell>
                       <TableCell className="max-w-[220px] truncate">
-                        {(row.AlamatObjek || (row as unknown as { alamatObjek?: string }).alamatObjek || "-") as string}
+                        {
+                          (row.AlamatObjek ||
+                            (row as unknown as { alamatObjek?: string })
+                              .alamatObjek ||
+                            "-") as string
+                        }
                       </TableCell>
                       <TableCell className="text-xs">
-                        {formatLuas((row.LuasBumi ?? (row as unknown as { luasBumi?: number }).luasBumi ?? null) as number | null)} /{" "}
-                        {formatLuas((row.LuasBangunan ?? (row as unknown as { luasBangunan?: number }).luasBangunan ?? null) as number | null)}
+                        {formatLuas(
+                          (row.LuasBumi ??
+                            (row as unknown as { luasBumi?: number })
+                              .luasBumi ??
+                            null) as number | null,
+                        )}{" "}
+                        /{" "}
+                        {formatLuas(
+                          (row.LuasBangunan ??
+                            (row as unknown as { luasBangunan?: number })
+                              .luasBangunan ??
+                            null) as number | null,
+                        )}
                       </TableCell>
                       <TableCell>
                         <Button
@@ -147,7 +171,8 @@ export default function DataSpptPage() {
                           className="h-7 px-2"
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (nop && tahun) router.push(`/sppt/${nop}?tahun=${tahun}`);
+                            if (nop && tahun)
+                              router.push(`/sppt/${nop}?tahun=${tahun}`);
                             else if (nop) router.push(`/sppt/${nop}`);
                           }}
                         >
@@ -171,7 +196,8 @@ export default function DataSpptPage() {
               <ChevronLeft /> Prev
             </Button>
             <span className="text-xs text-muted-foreground">
-              Halaman <b>{page}</b> · pageSize {pageSize} {hasMore ? "" : "· halaman terakhir"}
+              Halaman <b>{page}</b> · pageSize {pageSize}{" "}
+              {hasMore ? "" : "· halaman terakhir"}
             </span>
             <Button
               variant="outline"
@@ -186,7 +212,11 @@ export default function DataSpptPage() {
       </Card>
 
       <CardDescription className="text-center text-[11px]">
-        Klik baris untuk buka Hasil Data 1 pihak (NOP+tahun). Endpoint: <code className="rounded bg-secondary px-1 py-0.5">GET /api/Sppt?page=&pageSize=</code> · SARGable, AsNoTracking.
+        Klik baris untuk buka Hasil Data 1 pihak (NOP+tahun). Endpoint:{" "}
+        <code className="rounded bg-secondary px-1 py-0.5">
+          GET /api/Sppt?page=&pageSize=
+        </code>{" "}
+        · SARGable, AsNoTracking.
       </CardDescription>
     </div>
   );

@@ -52,7 +52,7 @@ export default function PencarianPage() {
     e?.preventDefault();
     if (!canSearch) {
       if (!nopValid) setError("Lengkapi NOP sampai 18 digit (7 bagian).");
-      else if (!tahunValid) setError("Tahun harus 4 digit 2000–2029.");
+      else if (!tahunValid) setError("Tahun harus 4 digit 2020-2026.");
       return;
     }
     setLoading(true);
@@ -116,13 +116,13 @@ export default function PencarianPage() {
               Cari Data SPPT
             </CardTitle>
             <CardDescription>
-              12.71.010.001.001.0010.0 — titik memisahkan tiap kode wilayah
+              12.71.010.001.001.0010.0 titik memisahkan tiap kode wilayah
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSearch} className="space-y-4">
               <div className="space-y-2">
-                <Label>NOP — isi per bagian</Label>
+                <Label>NOP isi per bagian</Label>
                 <NopSegmentedInput
                   value={nop}
                   onChange={(v) => {
@@ -152,7 +152,7 @@ export default function PencarianPage() {
               <div className="space-y-2">
                 <Label htmlFor="tahun" className="flex items-center gap-1.5">
                   <Calendar className="h-3.5 w-3.5" />
-                  Tahun Pajak (2000–2029)
+                  Tahun Pajak (2020-2026)
                 </Label>
                 <Input
                   id="tahun"
@@ -167,7 +167,7 @@ export default function PencarianPage() {
                 />
                 {tahun && !tahunValid && (
                   <p className="text-xs text-destructive">
-                    Tahun harus 2000–2029
+                    Tahun harus 2020-2026
                   </p>
                 )}
               </div>
@@ -262,23 +262,6 @@ export default function PencarianPage() {
             <CardContent className="space-y-3 text-sm leading-relaxed text-muted-foreground">
               <div className="flex gap-3">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                  1
-                </span>
-                <p className="text-foreground/80">
-                  Isi tiap kotak kode — kursor pindah sendiri, titik terisi
-                  otomatis.
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                  2
-                </span>
-                <p className="text-foreground/80">
-                  Tempel 18 digit sekaligus bila sudah punya — otomatis terbagi.
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                   3
                 </span>
                 <p className="text-foreground/80">
@@ -296,10 +279,10 @@ export default function PencarianPage() {
               </p>
               <ul className="mt-2 list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-muted-foreground">
                 <li>
-                  KdPropinsi (2) + KdDati2 (2) — wilayah provinsi/kabupaten.
+                  KdPropinsi (2) + KdDati2 (2) wilayah provinsi/kabupaten.
                 </li>
                 <li>KdKecamatan (3) + KdKelurahan (3) + KdBlok (3).</li>
-                <li>NoUrut (4) + KdJnsOp (1) — nomor urut dan jenis objek.</li>
+                <li>NoUrut (4) + KdJnsOp (1) nomor urut dan jenis objek.</li>
               </ul>
             </CardContent>
           </Card>

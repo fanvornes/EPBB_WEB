@@ -6,7 +6,7 @@ import { getSpptByNop, Sppt } from "@/services/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { ObjekSkeleton } from "@/components/skeletons/ObjekSkeleton";
 import { formatLuas } from "@/lib/format";
 import { formatNopDotted } from "@/lib/validators";
 import { MapPinned, Search } from "lucide-react";
@@ -51,13 +51,7 @@ export default function ObjekPajakPage() {
     );
   }
 
-  if (loading)
-    return (
-      <div className="mx-auto max-w-4xl space-y-3">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-48" />
-      </div>
-    );
+  if (loading) return <ObjekSkeleton />;
   if (error) return <div className="p-8 text-center text-sm text-destructive">{error}</div>;
 
   const sppt = data?.[0];

@@ -6,7 +6,7 @@ import { getSpptByNop, Sppt } from "@/services/api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { WpSkeleton } from "@/components/skeletons/WpSkeleton";
 import {
   Table,
   TableHeader,
@@ -43,7 +43,7 @@ export default function WajibPajakPage() {
         <Card className="border-amber-300/60 bg-amber-50">
           <CardContent className="p-8 text-center">
             <Users className="mx-auto h-8 w-8 text-amber-600" />
-            <h2 className="mt-3 font-semibold">Wajib Pajak – Read Only</h2>
+            <h2 className="mt-3 font-semibold">Wajib Pajak  Read Only</h2>
             <p className="mt-1 text-sm text-muted-foreground">Halaman ini menampilkan data WP untuk NOP terpilih. Silakan cari NOP dulu.</p>
             <Button asChild className="mt-4">
               <Link href="/pencarian">
@@ -59,13 +59,7 @@ export default function WajibPajakPage() {
     );
   }
 
-  if (loading)
-    return (
-      <div className="mx-auto max-w-4xl space-y-3">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-48" />
-      </div>
-    );
+  if (loading) return <WpSkeleton />;
   if (error) return <div className="p-8 text-center text-sm text-destructive">{error}</div>;
 
   const sppt = data?.[0];
@@ -104,7 +98,7 @@ export default function WajibPajakPage() {
             <span className="font-mono text-xs">{formatNopDotted(nop)}</span>
           </div>
           <p className="rounded-lg border border-border bg-secondary/60 p-3 text-xs text-muted-foreground">
-            Endpoint rill: <code>GET /api/WajibPajak?nop=</code> (join DatObjekPajak → DatSubjekPajak) belum tersedia – placeholder ini pakai data SPPT.
+            Endpoint rill: <code>GET /api/WajibPajak?nop=</code> (join DatObjekPajak → DatSubjekPajak) belum tersedia  placeholder ini pakai data SPPT.
           </p>
           <div className="flex gap-2">
             <Button asChild size="sm" variant="outline">
